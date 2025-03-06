@@ -7,6 +7,14 @@ import (
 	"time"
 )
 
+func makeRange(min, max int) []int {
+	a := make([]int, max-min+1)
+	for i := range a {
+		a[i] = min + i
+	}
+	return a
+}
+
 func defaultWorker(i int) int {
 	sleepFor := time.Duration(rand.Intn(10)) * time.Second
 	time.Sleep(sleepFor)
@@ -32,7 +40,7 @@ func parallelWork[T any, R any](data []T, worker func(T) R) <-chan R {
 }
 
 func main() {
-	for r := range parallelWork[int, int]([]int{1, 2, 3, 4, 5}, defaultWorker) {
+	for r := range parallelWork[int, int](makeRange(1, 20), defaultWorker) {
 		fmt.Println(r)
 	}
 }
